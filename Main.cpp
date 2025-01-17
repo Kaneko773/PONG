@@ -11,8 +11,6 @@
 
 //弾は最初はランダム、以降は点を取られた方に発射される
 
-int g_error = 0;//デバッグ用
-
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -81,7 +79,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		ScreenFlip();//表示
 
-		//一時的(5点で終了)
 		if (player->Get_m_score() >= EndingScore || cpu->Get_m_score() >= EndingScore) {
 			break;
 		}
@@ -101,11 +98,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	DeleteFontToHandle(FontHandle_score);
-
-	ClearDrawScreen();//画面クリア
-	DrawFormatString(0, 0, GetColor(255, 255, 255), "エラー%d", g_error);
-	ScreenFlip();//表示
-	if(g_error != 0)WaitTimer(2000);
 
 	// ＤＸライブラリ使用の終了処理
 	DxLib_End();

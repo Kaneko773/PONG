@@ -7,8 +7,6 @@
 #include "CPU.h"
 #include "Player.h"
 
-extern int g_error;/////////////////////
-
 Ball::Ball() {
 	
 }
@@ -80,35 +78,31 @@ bool Ball::Move(Paddle& pPad, Paddle& ePad) {
 		//y=(x+r-p)a+q+s
 		//x=(y-q-s)/a+p+r
 
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	//error 2,4 ボールのサイズを大きくすると発生確率が上がる
-
+	
 	//上下の貫通対策
 	if (m_pos.y - BallSize < 0) {//上 m_pos.y - BallSizeを０にする
-		if (m_pos.x == pastPos.x)/*エラー*/ { g_error = 2; return false; }
+		if (m_pos.x == pastPos.x)/*エラー*/ { return false; }
 		float a = (m_pos.y - pastPos.y) / (m_pos.x - pastPos.x);
-		if (a == 0)/*エラー*/ { g_error = 3; return false; }//error2
+		if (a == 0)/*エラー*/ { return false; }
 		float tempX = (0 - pastPos.y - (-1 * BallSize)) / a + pastPos.x + 0;//上限(y座標)=ボールの上部(y座標) の時のX座標
 
 		m_pos.x = tempX;
-		//m_pos.y = BallSize - 1;//-1してちょっとだけ貫通させる//////////////////////////////////////////
 		m_pos.y = BallSize;
 	}
 	if (m_pos.y + BallSize > ScreenHeight - 1) {//下
-		if (m_pos.x == pastPos.x)/*エラー*/ { g_error = 4; return false; }
+		if (m_pos.x == pastPos.x)/*エラー*/ { return false; }
 		float a = (m_pos.y - pastPos.y) / (m_pos.x - pastPos.x);
-		if (a == 0)/*エラー*/ { g_error = 5; return false; }//error4
+		if (a == 0)/*エラー*/ { return false; }
 		float tempX = ((ScreenHeight - 1) - pastPos.y - BallSize) / a + pastPos.x + 0;//下限(y座標)=ボールの下部(y座標) の時のX座標
 
 		m_pos.x = tempX;
-		//m_pos.y = ScreenHeight - 1 - BallSize + 1;//+1してちょっとだけ貫通させる//////////////////////////////////////////
 		m_pos.y = ScreenHeight - 1 - BallSize;
 	}
 
 	//プレイヤーのパドル
 	if (m_pos.x <= PaddleaPosX) {
 
-		if (m_pos.x == pastPos.x)/*エラー*/ { g_error = 6; return false; }
+		if (m_pos.x == pastPos.x)/*エラー*/ { return false; }
 		float a = (m_pos.y - pastPos.y) / (m_pos.x - pastPos.x);
 		float tempY = (pPad.Get_m_pos().x + 0 - pastPos.x) * a + pastPos.y + 0;//パドルの位置(x座標)=ボールの中心(x座標) の時のY座標
 
@@ -119,7 +113,7 @@ bool Ball::Move(Paddle& pPad, Paddle& ePad) {
 	}
 	//敵のパドル
 	else if (ScreenWidth - 1 - PaddleaPosX <= m_pos.x) {
-		if (m_pos.x == pastPos.x)/*エラー*/ { g_error = 7; return false; }
+		if (m_pos.x == pastPos.x)/*エラー*/ { return false; }
 		float a = (m_pos.y - pastPos.y) / (m_pos.x - pastPos.x);
 		float tempY = (ePad.Get_m_pos().x + 0 - pastPos.x) * a + pastPos.y + 0;//パドルの位置(x座標)=ボールの中心(x座標) の時のY座標
 
@@ -133,7 +127,7 @@ bool Ball::Move(Paddle& pPad, Paddle& ePad) {
 }
 //速度変更
 void Ball::SpeedUp() {
-	if (m_boundNum % SpeedUpMultiple == 0)m_speed *= SpeedUpMagnification;// 1 → 1.5 倍ぐらいランダムで加えても良いかも!!!!!!!!!!
+	if (m_boundNum % SpeedUpMultiple == 0)m_speed *= SpeedUpMagnification;
 	if (m_speed > MAX_BALL_SPEED) m_speed = MAX_BALL_SPEED;
 }
 
@@ -275,7 +269,7 @@ state Ball::HitJudge(Paddle& pPad, Paddle& ePad) {
 	}
 	//上限
 	if (m_pos.y - BallSize <= 0) {
-		if (m_angle == 90) { g_error = 12; /*エラー*/ return error; }
+		if (m_angle == 90) { /*エラー*/ return error; }
 		if (0 < m_angle && m_angle < 90) m_angle = 360 - m_angle;
 		if (90 < m_angle && m_angle < 180) m_angle = 360 - m_angle;
 
@@ -283,7 +277,7 @@ state Ball::HitJudge(Paddle& pPad, Paddle& ePad) {
 	}
 	//下限
 	if (m_pos.y + BallSize >= ScreenHeight - 1) {
-		if (m_angle == 270) { g_error = 13; /*エラー*/ return error; }
+		if (m_angle == 270) { /*エラー*/ return error; }
 		if (180 < m_angle && m_angle < 270) m_angle = 360 - m_angle;
 		if (270 < m_angle && m_angle < 360) m_angle = 360 - m_angle;
 
