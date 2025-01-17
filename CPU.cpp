@@ -6,8 +6,6 @@
 #include "CPU.h"
 #include "Ball.h"
 
-extern int g_error;/////////////////////
-
 CPU::CPU() {
 	
 }
@@ -31,9 +29,6 @@ void CPU::Paddle_Move(Ball& ball) {
 	if (toInvestigate && ball.Get_m_pos().x >= (float)ScreenWidth / 2) {
 		Search(ball);
 	}
-	/*if (toInvestigate && m_ballPredictedPosY == -99 && ball.Get_m_pos().x >= ScreenWidth / 2) {
-		Search(ball);
-	}*/
 
 	//予測位置まで移動
 	if (m_ballPredictedPosY != -99) {
@@ -69,41 +64,7 @@ void CPU::Search(Ball& ball) {
 	{
 		if (CheckHitKey(KEY_INPUT_ESCAPE) != 0)return;//ループ時抜ける用
 
-#if 0
-		float a = (float)tan((360 - tempBallAngle) * 3.1415926535 / 180);
-		if (a == 0) { g_error = 1; return; }/*エラー*///後で!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		float b = tempBallPos.y - a * tempBallPos.x; //y=ax+b → b=y-ax
-
-		float y = a * m_paddle->Get_m_pos().x + b;//パドルの位置でのy座標を求める
-
-
-
-		if (y < 0) {
-			b -= BallSize;
-			float x = (0 - b) / a;
-			tempBallPos.x = x;
-			tempBallPos.y = BallSize;
-			tempBallAngle = 360 - tempBallAngle;
-
-		}
-		else if (ScreenHeight - 1 < y) {
-			b += BallSize;
-			float x = ((ScreenWidth - 1) - b) / a;
-			tempBallPos.x = x;
-			tempBallPos.y = -1 * BallSize;
-			tempBallAngle = 360 - tempBallAngle;
-		}
-		else {//予測位置設定
-			m_ballPredictedPosY = y;
-			toInvestigate = false;
-			return;
-		}
-#else
 		if(tempBallAngle == 90 || tempBallAngle == 270) {//エラー
-			g_error = 16;
-			DrawFormatString(0, 0, GetColor(255, 255, 255), "深刻なエラー、落とせ！ エラー%d", g_error);
-			ScreenFlip();//表示
-			WaitTimer(5000);
 			return;
 		}
 		float a = (float)tan(tempBallAngle * 3.1415926535 / 180);
@@ -115,10 +76,6 @@ void CPU::Search(Ball& ball) {
 
 		if (y < 0) {
 			if (a == 0 || a == 180) {//エラー
-				g_error = 14;
-				DrawFormatString(0, 0, GetColor(255, 255, 255), "深刻なエラー、落とせ！ エラー%d", g_error);
-				ScreenFlip();//表示
-				WaitTimer(5000);
 				return;
 			}
 			b -= BallSize;
@@ -129,10 +86,6 @@ void CPU::Search(Ball& ball) {
 		}
 		else if (ScreenHeight - 1 < y) {
 			if (a == 0 || a == 180) {//エラー
-				DrawFormatString(0, 0, GetColor(255, 255, 255), "深刻なエラー、落とせ！ エラー%d", g_error);
-				ScreenFlip();//表示
-				WaitTimer(5000);
-				g_error = 15;
 				return;
 			}
 			b += BallSize;
@@ -146,6 +99,5 @@ void CPU::Search(Ball& ball) {
 			toInvestigate = false;
 			return;
 		}
-#endif
 	}
 }

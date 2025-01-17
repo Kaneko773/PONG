@@ -317,13 +317,13 @@ bool Ball::Update(Player* player, CPU* cpu) {
 		player->Add_m_score();
 		Set_m_direction(1);
 		Reset();
-		cpu->Reset_Search();//
+		cpu->Reset_Search();
 		break;
 	case cpuPoint:
 		cpu->Add_m_score();
 		Set_m_direction(-1);
 		Reset();
-		cpu->Reset_Search();//
+		cpu->Reset_Search();
 		break;
 	case preparation:
 		Preparation();
